@@ -14,7 +14,7 @@ var Twitter = require('twitter');
 var spotify = require('spotify');
 //Request API (imdb)
 var request = require('request');
-
+// FS API
 var fs = require('fs');
 
 var consumerKey = myTwitter.twitterKeys.consumer_key;
@@ -113,3 +113,9 @@ var count = 20;
       console.log("*************************************************************");
     });//end movie function
 }//end if
+
+function readFile(){
+fs.readFile("random.txt", "utf8", function(error, response){
+   console.log(response);
+ });
+}//end function
