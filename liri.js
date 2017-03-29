@@ -40,8 +40,26 @@ var search = process.argv;
 
 //the maximum number of tweets to display
 var count = 20;
+var getmovie = "";
+
+//switch statement that goes through each command the user enters
+switch(user){
+  case 'my-tweets':
+    getTwitter(); //calls function    
+    break;
+  case 'spotify-this-song':
+    getSpotify(); //calls function
+    break;
+  case 'movie-this':
+    getFlick(); //calls function
+    break;
+  case 'do-what-it-says':
+    getRead(); //calls function
+    break;
+}//end switch 
+
     //when user enters my-tweets for current tweets
-    if (user === "my-tweets") {
+    function getTwitter(){
         client.get('statuses/user_timeline.json?screen_name=codingbr&' + count, function (error, tweets, response) {
             //console.log(JSON.stringify(tweets, null, 2));
             for (var i = 0; i < tweets.length; i++) {
@@ -51,8 +69,9 @@ var count = 20;
             }//end for loop
 
         });//end function
-    } 
+    }//end getTwitter function
 
+    function getSpotify(){
     //when user enters a song title
     if(user === "spotify-this-song" && process.argv[3] !== ""){
         
@@ -79,14 +98,16 @@ var count = 20;
                 console.log("*************************************************************");
             });//end function
     }
+  }//end getSpotify function
 
+  function getFlick(){
     //when user enters movie title
     if(user === "movie-this" && process.argv[3] !== ""){
         for(var i = 3; i < search.length; i++){
             moviesArray.push(search[i]);
         }//end for loop
-        var getMovie = moviesArray.join(" ");
-    
+        getMovie = moviesArray.join(" ");
+      }
       request('http://www.omdbapi.com/?t=' + getMovie, function (error, response, body) {
       // console.log('error:', error); // Print the error if one occurred 
       // console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
@@ -112,10 +133,22 @@ var count = 20;
       console.log("Rotten Tomatoes Website: https://www.rottentomatoes.com/");
       console.log("*************************************************************");
     });//end movie function
-}//end if
+  }//end getFlick function
 
-function readFile(){
+function getRead(){
 fs.readFile("random.txt", "utf8", function(error, response){
-   console.log(response);
- });
-}//end function
+    console.log(response);
+     spotify.search({ type: 'track', query: response }, function(err, data) {
+        console.log("*************************************************************");
+            //artist name
+            console.log("Artist: " + JSON.stringify(data.tracks.items[0].album.artists[0].name, null, 2));
+            //song name
+            console.log("Song Name: " + JSON.stringify(data.tracks.items[0].name, null, 2));
+            //preview link of the song
+            console.log("Preview Song: " + JSON.stringify(data.tracks.items[0].preview_url, null, 2));
+            //album name
+            console.log("Album Name: " + JSON.stringify(data.tracks.items[0].album.name, null, 2));
+            console.log("*************************************************************");
+     });//end spotify function
+  });
+}//end getRead function
